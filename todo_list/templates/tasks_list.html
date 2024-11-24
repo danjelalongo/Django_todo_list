@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks List{% endblock %}
+
+<script>
+    const updateTaskPositionUrl = "{% url 'update_task_position' %}";
+</script>
+
+{% block header %}Tasks List{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <!-- Add New Task Button -->
+        <div class="mb-4">
+            <a href="{% url 'task_create' %}" class="btn btn-primary">
+                Add New Task
+            </a>
+        </div>
+
+        <!-- Task List -->
+        <ol id="task-list" class="list-group list-group-numbered">
+            {% for task in tasks %}
+            <li class="list-group-item task-item d-flex justify-content-between align-items-start" data-id="{{ task.id }}">
+                <div class="task-card d-flex w-100 justify-content-between align-items-start">
+                    <!-- Task Title -->
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">
+                            <a href="{% url 'task_detail' task.id %}" class="text-decoration-none text-dark">{{ task.title }}</a>
+                        </div>
+                        <!-- Task Description -->
+                        <div>{{ task.description|truncatewords:10 }}</div>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <button class="btn status-btn {% if task.complete %}completed{% else %}not-completed{% endif %}" data-id="{{ task.id }}" title="{% if task.complete %}Completed{% else %}Not Completed{% endif %}">
+                        <svg class="status-circle" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="11" stroke="#2c3e50" stroke-width="2" fill="none"/>
+                            {% if task.complete %}
+                                <path d="M7 12l4 4 6-6" stroke="green" stroke-width="2" fill="none"/>
+                            {% endif %}
+                        </svg>
+                    </button>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endblock %}
